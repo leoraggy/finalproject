@@ -4,10 +4,10 @@ import prisma from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const transaction = await prisma.transaction.findUnique({
       where: { transaction_id: parseInt(id, 10) },
     });
@@ -22,10 +22,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const updates = await request.json();
     const post = await prisma.transaction.update({
       where: { transaction_id: parseInt(id) },
@@ -46,18 +46,19 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
 
-    // Delete the post with the specified ID
+    // Delete the transaction with the specified ID
     await prisma.transaction.delete({
       where: {
         transaction_id: parseInt(id),
       },
     });
+
     // Return success message (no content to return since it's deleted)
     return NextResponse.json({ message: "Transaction deleted successfully" });
   } catch (error) {
