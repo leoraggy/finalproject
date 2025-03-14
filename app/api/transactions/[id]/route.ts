@@ -53,7 +53,7 @@ export async function DELETE(
     const { id } = await params;
 
     // Delete the post with the specified ID
-    const deleteUser = await prisma.transaction.delete({
+    await prisma.transaction.delete({
       where: {
         transaction_id: parseInt(id),
       },

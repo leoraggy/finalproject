@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const transactions = await prisma.transaction.findMany();
     return NextResponse.json(transactions);
-  } catch (error) {
+  } catch (error: any) {
     // Return error message
     return NextResponse.json(
       { error: "Failed to fetch transactions" },
