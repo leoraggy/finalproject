@@ -2,7 +2,7 @@
 // sign in and sign out functions getSessionHook
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,

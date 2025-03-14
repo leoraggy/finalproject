@@ -1,12 +1,10 @@
-//bring in next auth
-import NextAuth from "next-auth";
 //bring in google provider
 import GoogleProvider from "next-auth/providers/google";
 import DiscordProvider from "next-auth/providers/discord";
 import TwitchProvider from "next-auth/providers/twitch";
 import type { JWT } from "next-auth/jwt";
 import type { Session } from "next-auth";
-import { User as NextAuthUser } from "next-auth";
+import type { Account } from "next-auth";
 
 // Add types to include roles in the session and JWT
 declare module "next-auth" {
@@ -44,7 +42,7 @@ export const authOptions = {
   ],
   callbacks: {
     // This callback is called when creating a JWT on sign in
-    async jwt({ token, account }: { token: JWT; account: any }) {
+    async jwt({ token, account }: { token: JWT; account: Account | null }) {
       // If we have a user signing in, get or create their DB entry to get roles
       if (account) {
         token.accessToken = account.access_token;
