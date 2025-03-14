@@ -15,15 +15,12 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  if (!body) {
-    return NextResponse.json({ error: "Body is required" }, { status: 400 });
-  }
   try {
     const newAccounts = await prisma.account.create({
       data: body,
     });
     return NextResponse.json(newAccounts, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating account:", error);
     return NextResponse.json({ message: error.message }, { status: 400 });
   }
