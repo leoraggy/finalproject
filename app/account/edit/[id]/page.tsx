@@ -18,7 +18,6 @@ export default async function page(props: { params: Promise<{ id: string }> }) {
 
     const account_name = formData.get("accountName") as string;
     const account_type = formData.get("accountType") as string;
-    const balance = parseFloat(formData.get("balance") as string);
 
     await prisma.account.update({
       where: {
@@ -42,12 +41,12 @@ export default async function page(props: { params: Promise<{ id: string }> }) {
       },
     });
 
-    const deleteAccount = prisma.account.delete({
+    const deleteA = prisma.account.delete({
       where: {
         account_id: accountId,
       },
     });
-    await prisma.$transaction([deleteTransactions, deleteAccount]);
+    await prisma.$transaction([deleteTransactions, deleteA]);
     revalidatePath("/account");
     redirect("/account");
   }
