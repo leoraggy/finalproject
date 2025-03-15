@@ -18,17 +18,6 @@ export default async function page() {
   if (!session) {
     redirect("/api/auth/signin");
   }
-
-  async function deleteAccount(id: number) {
-    "use server";
-    await prisma.account.delete({
-      where: {
-        account_id: id,
-      },
-    });
-    redirect(`/account/${id}`);
-  }
-
   const accounts = await prisma.account.findMany();
   return (
     <div>
@@ -44,7 +33,7 @@ export default async function page() {
                     key={account.account_id}
                     href={`/account/${account.account_id}`}
                   >
-                    {account.account_name}'s {account.account_type}
+                    {account.account_name}&apos;s {account.account_type}
                   </Link>
                 </TableCell>
                 <TableCell className="text-right border-b-2 border-t-2 text-xl">
