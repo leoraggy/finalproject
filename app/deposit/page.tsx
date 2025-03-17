@@ -12,7 +12,7 @@ export default async function page() {
     const id = parseInt(formData.get("accounts") as string);
     const deposit_amount = parseFloat(formData.get("depositAmount") as string);
 
-    const account = await prisma.account.update({
+    await prisma.account.update({
       where: {
         account_id: id,
       },
