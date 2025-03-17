@@ -3,13 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
 export async function GET(
-  request: NextRequest,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
     const transaction = await prisma.transaction.findUnique({
-      where: { transaction_id: parseInt(id, 10) },
+      where: { transaction_id: 1 },
     });
     return NextResponse.json(transaction);
   } catch (error) {
