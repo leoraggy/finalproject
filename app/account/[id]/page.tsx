@@ -21,9 +21,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     });
   };
   useEffect(() => {
-    if (id) {
-      fetchTransactions(id as string); // Only fetch data if `id` is available
-    }
+    fetchTransactions(id);
   }, [id, transactions]);
 
   const fetchTransactions = async (accountId: string) => {

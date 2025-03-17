@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { id } = await params;
     const transaction = await prisma.transaction.findUnique({
-      where: { transaction_id: 1 },
+      where: { transaction_id: parseInt(id) },
     });
     return NextResponse.json(transaction);
   } catch (error) {
