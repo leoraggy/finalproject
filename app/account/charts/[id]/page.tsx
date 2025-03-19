@@ -5,7 +5,7 @@ export default async function page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const accountId = parseInt(params.id);
 
-  let chartData = [];
+  const chartData = [];
   let amount = 0;
 
   const merchandise = await prisma.transaction.findMany({

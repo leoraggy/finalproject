@@ -7,12 +7,12 @@ import { DTransaction } from "@/lib";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { CardsSkeleton } from "@/components/ui/skeleton";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
-  const { data: session } = useSession();
-  if (!session) {
-    return <div>You are not authorized</div>;
-  }
+  // const { data: session } = useSession();
+  // if (!session) {
+  //   return <div>You are not authorized</div>;
+  // }
   const { id } = use(params);
   const [transactions, setTransactions] = useState<DTransaction[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
