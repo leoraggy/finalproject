@@ -14,7 +14,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alertdialog";
+import { getServerSession } from "next-auth";
 export default async function page(props: { params: Promise<{ id: string }> }) {
+  const session = await getServerSession();
+  if (!session) {
+    redirect("/api/auth/signin");
+  }
   const params = await props.params;
   const accountId = parseInt(params.id);
 

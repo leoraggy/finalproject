@@ -1,16 +1,25 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, Suspense } from "react";
 import { DataTable } from "@/components/transaction-table/data-table";
 import { columns } from "@/components/transaction-table/column";
 import { DTransaction } from "@/lib";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { CardsSkeleton } from "@/components/ui/skeleton";
+import { useSession } from "next-auth/react";
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { data: session } = useSession();
+  if (!session) {
+    return <div>You are not authorized</div>;
+  }
   const { id } = use(params);
   const [transactions, setTransactions] = useState<DTransaction[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState("");
+  useEffect(() => {
+    fetchTransactions(id);
+  }, [id]);
 
   const formatDate = (dateString: string | Date) => {
     const date = new Date(dateString);
@@ -20,9 +29,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       day: "numeric",
     });
   };
-  useEffect(() => {
-    fetchTransactions(id);
-  }, [id, transactions]);
 
   const fetchTransactions = async (accountId: string) => {
     try {
@@ -48,7 +54,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <div>
-      <DataTable columns={columns} data={transactions} />
+      <Suspense fallback={<CardsSkeleton />}>
+        <DataTable columns={columns} data={transactions} loading={loading} />
+      </Suspense>
+
       <Link className={buttonVariants({ variant: "outline" })} href="/account">
         Go Back
       </Link>

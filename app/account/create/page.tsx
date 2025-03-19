@@ -2,8 +2,13 @@ import Form from "next/form";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 
-export default function page() {
+export default async function page() {
+  const session = await getServerSession();
+  if (!session) {
+    redirect("/api/auth/signin");
+  }
   async function createAccount(formData: FormData) {
     "use server";
 
