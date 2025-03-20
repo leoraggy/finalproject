@@ -60,7 +60,7 @@ export function DataTable<TData, TValue>({
             (table.getColumn("transaction_name")?.getFilterValue() as string) ??
             ""
           }
-          onChange={(event: { target: { value: any } }) =>
+          onChange={(event: { target: { value: string } }) =>
             table
               .getColumn("transaction_name")
               ?.setFilterValue(event.target.value)
