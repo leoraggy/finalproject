@@ -9,6 +9,9 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^6.5.0",
     "@prisma/extension-accelerate": "^1.2.2",

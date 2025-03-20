@@ -63,12 +63,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       </Link>
       <Link
         className={buttonVariants({ variant: "outline" })}
+        href={`/account/charts/${id}`}
+      >
+        Charts
+      </Link>
+      <Link
+        className={buttonVariants({ variant: "outline" })}
         href="/transactions/create"
       >
         Add a transaction
       </Link>
-
-      {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );

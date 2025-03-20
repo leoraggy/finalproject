@@ -46,18 +46,6 @@ export default async function page(props: { params: Promise<{ id: string }> }) {
   });
   amount = 0;
 
-  const gasoline = await prisma.transaction.findMany({
-    where: { account_id: accountId, category: "Gasoline" },
-  });
-  for (let i = 0; i < gasoline.length; i++) {
-    amount += gasoline[i].amount.toNumber();
-  }
-  chartData.push({
-    category: "Gasoline",
-    amount: amount,
-    fill: "var(--color-gasoline)",
-  });
-  amount = 0;
   const supermarket = await prisma.transaction.findMany({
     where: { account_id: accountId, category: "Supermarket" },
   });
@@ -67,19 +55,20 @@ export default async function page(props: { params: Promise<{ id: string }> }) {
   chartData.push({
     category: "Supermarket",
     amount: amount,
+    fill: "var(--color-gasoline)",
+  });
+  amount = 0;
+  const other = await prisma.transaction.findMany({
+    where: { account_id: accountId, category: "Other" },
+  });
+  for (let i = 0; i < other.length; i++) {
+    amount += other[i].amount.toNumber();
+  }
+  chartData.push({
+    category: "Other",
+    amount: amount,
     fill: "var(--color-other)",
   });
-  // amount = 0;
-  // const other = await prisma.transaction.findMany({
-  //   where: { account_id: accountId, category: "Other" },
-  // });
-  // for (let i = 0; i < other.length; i++) {
-  //   amount += other[i].amount.toNumber();
-  // }
-  // chartData.push({
-  //   category: "Other",
-  //   amount: amount,
-  // });
   console.log(chartData);
   return (
     <div>

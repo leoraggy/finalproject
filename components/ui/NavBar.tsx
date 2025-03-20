@@ -14,7 +14,7 @@ import {
 export default function NavBar() {
   const { data: session } = useSession();
   return (
-    <nav className="flex justify-between p-5">
+    <nav className="flex justify-between p-5 bg-blue-400">
       <Link className={buttonVariants({ variant: "outline" })} href="/">
         Home
       </Link>
