@@ -6,70 +6,42 @@ export default async function page(props: { params: Promise<{ id: string }> }) {
   const accountId = parseInt(params.id);
 
   const chartData = [];
-  let amount = 0;
 
-  const merchandise = await prisma.transaction.findMany({
-    where: { account_id: accountId, category: "Merchandise" },
-  });
-  for (let i = 0; i < merchandise.length; i++) {
-    amount += merchandise[i].amount.toNumber();
-  }
-  chartData.push({
-    category: "Merchandise",
-    amount: amount,
-    fill: "var(--color-merchandise)",
-  });
-  amount = 0;
-  const entertainment = await prisma.transaction.findMany({
-    where: { account_id: accountId, category: "Entertainment" },
-  });
-  for (let i = 0; i < entertainment.length; i++) {
-    amount += entertainment[i].amount.toNumber();
-  }
-  chartData.push({
-    category: "Entertainment",
-    amount: amount,
-    fill: "var(--color-entertainment)",
-  });
-  amount = 0;
+  const categories = [
+    "Merchandise",
+    "Entertainment",
+    "Restaurants",
+    "Supermarket",
+    "Other",
+  ];
+  const categoryColors: Record<string, string> = {
+    Merchandise: "var(--color-merchandise)",
+    Entertainment: "var(--color-entertainment)",
+    Restaurants: "var(--color-restaurants)",
+    Supermarket: "var(--color-gasoline)",
+    Other: "var(--color-other)",
+  };
 
-  const restaurants = await prisma.transaction.findMany({
-    where: { account_id: accountId, category: "Restaurants" },
-  });
-  for (let i = 0; i < restaurants.length; i++) {
-    amount += restaurants[i].amount.toNumber();
-  }
-  chartData.push({
-    category: "Restaurants",
-    amount: amount,
-    fill: "var(--color-restaurants)",
-  });
-  amount = 0;
+  const results = await Promise.all(
+    categories.map((category) =>
+      prisma.transaction
+        .findMany({
+          where: { account_id: accountId, category },
+        })
+        .then((transactions) => ({
+          category,
+          amount: transactions.reduce(
+            (sum, tx) => sum + tx.amount.toNumber(),
+            0
+          ),
+          fill: categoryColors[category],
+        }))
+    )
+  );
 
-  const supermarket = await prisma.transaction.findMany({
-    where: { account_id: accountId, category: "Supermarket" },
-  });
-  for (let i = 0; i < supermarket.length; i++) {
-    amount += supermarket[i].amount.toNumber();
-  }
-  chartData.push({
-    category: "Supermarket",
-    amount: amount,
-    fill: "var(--color-gasoline)",
-  });
-  amount = 0;
-  const other = await prisma.transaction.findMany({
-    where: { account_id: accountId, category: "Other" },
-  });
-  for (let i = 0; i < other.length; i++) {
-    amount += other[i].amount.toNumber();
-  }
-  chartData.push({
-    category: "Other",
-    amount: amount,
-    fill: "var(--color-other)",
-  });
-  console.log(chartData);
+  // Push all processed data to chartData
+  chartData.push(...results);
+
   return (
     <div>
       <Component chartData={chartData}></Component>

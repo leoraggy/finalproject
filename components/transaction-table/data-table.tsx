@@ -1,12 +1,16 @@
 "use client";
 import {
   ColumnDef,
+  ColumnFiltersState,
+  SortingState,
   getPaginationRowModel,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
+import { Input } from "../ui/input";
 import {
   Table,
   TableBody,
@@ -16,6 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTablePagination } from "./data-table-pagination";
+import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -28,15 +33,41 @@ export function DataTable<TData, TValue>({
   data,
   loading,
 }: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      sorting,
+      columnFilters,
+    },
   });
 
   return (
     <div>
+      <div className="flex items-center py-4">
+        <Input
+          placeholder="Filter names..."
+          value={
+            (table.getColumn("transaction_name")?.getFilterValue() as string) ??
+            ""
+          }
+          onChange={(event: { target: { value: any } }) =>
+            table
+              .getColumn("transaction_name")
+              ?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+      </div>
       <div className="mx-6 rounded-md border">
         <Table>
           <TableHeader>
