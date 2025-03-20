@@ -62,7 +62,6 @@ export default async function page() {
             <option value="Merchandise">Merchandise</option>
             <option value="Entertainment">Entertainment </option>
             <option value="Restaurants">Restaurants </option>
-            <option value="Gasoline">Gasoline </option>
             <option value="Supermarket">Supermarket </option>
             <option value="Other">Other </option>
           </select>

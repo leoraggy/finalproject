@@ -2,6 +2,18 @@ import Form from "next/form";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alertdialog";
+import { Button } from "@/components/ui/button";
 
 export default async function page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -31,6 +43,17 @@ export default async function page(props: { params: Promise<{ id: string }> }) {
       },
     });
 
+    revalidatePath(`/account/${transaction?.account_id}`);
+    redirect(`/account/${transaction?.account_id}`);
+  }
+
+  async function deleteTransaction() {
+    "use server";
+    await prisma.transaction.delete({
+      where: {
+        transaction_id: transactionId,
+      },
+    });
     revalidatePath(`/account/${transaction?.account_id}`);
     redirect(`/account/${transaction?.account_id}`);
   }
@@ -88,8 +111,28 @@ export default async function page(props: { params: Promise<{ id: string }> }) {
           type="submit"
           className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600"
         >
-          Add Transaction
+          Save
         </button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive">Delete</Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action is irreversible. Deleting this transaction will
+                permanently be deleted from our servers.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction asChild>
+                <Button onClick={deleteTransaction}>Delete</Button>
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </Form>
     </div>
   );

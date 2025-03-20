@@ -14,23 +14,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const handleDelete = async (tId: number) => {
-  try {
-    // Make DELETE request to our API
-    console.log(tId);
-    const response = await fetch(`/api/transactions/${tId}`, {
-      method: "DELETE",
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to delete transaction");
-    }
-  } catch (err) {
-    console.error("Error:", err);
-    throw err;
-  }
-};
-
 export const columns: ColumnDef<DTransaction>[] = [
   {
     accessorKey: "transaction_name",
@@ -113,11 +96,8 @@ export const columns: ColumnDef<DTransaction>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <Link href={`/transactions/edit/${transactionId}`}>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem>Settings</DropdownMenuItem>
             </Link>
-            <DropdownMenuItem onClick={() => handleDelete(transactionId)}>
-              Delete
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
